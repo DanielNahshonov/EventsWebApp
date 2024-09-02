@@ -3,8 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 interface IProfile extends Document {
   firstName: string;
   lastName: string;
-  phone: string;
   email: string;
+  phone: string;
   willCome: 'yes' | 'maybe' | 'no'; // Определяем возможные значения
 }
 

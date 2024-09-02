@@ -4,14 +4,31 @@ import Profile from '../models/profile';
 const router = Router();
 
 // Создать профиль
-router.post('/profiles', async (req, res) => {
-  try {
-    const profile = new Profile(req.body);
-    await profile.save();
-    res.status(201).json(profile);
-  } catch (error) {
-    if (error instanceof Error) {
+router.post('/', async (req, res) => {
+    console.log('Received data:', req.body); // Отладочное сообщение
+  
+    const { firstName, lastName, email, phone, willCome } = req.body;
+  
+    if (!firstName || !lastName || !email || !phone || !willCome) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+  
+    try {
+      const profile = new Profile({
+        firstName,
+        lastName,
+        phone,
+        email,
+        willCome
+      });
+      await profile.save();
+      res.status(201).json({ profileId: profile._id });
+    } catch (error) {
+      console.error('Error:', error); // Отладочное сообщение
+      if (error instanceof Error) {
+        console.log(error)
         res.status(400).json({ error: error.message });
+        console.log(error)
       } else {
         res.status(500).json({ error: 'An unknown error occurred' });
       }
@@ -19,7 +36,7 @@ router.post('/profiles', async (req, res) => {
   });
 
 // Получить все профили
-router.get('/profiles', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const profiles = await Profile.find();
     res.status(200).json(profiles);
@@ -33,7 +50,7 @@ router.get('/profiles', async (req, res) => {
   });
 
 // Получить профиль по ID
-router.get('/profiles/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);
     if (!profile) return res.status(404).json({ error: 'Profile not found' });
@@ -48,7 +65,7 @@ router.get('/profiles/:id', async (req, res) => {
   });
 
 // Обновить профиль
-router.put('/profiles/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const profile = await Profile.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!profile) return res.status(404).json({ error: 'Profile not found' });
@@ -62,7 +79,7 @@ router.put('/profiles/:id', async (req, res) => {
     }
   });
 // Удалить профиль
-router.delete('/profiles/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const profile = await Profile.findByIdAndDelete(req.params.id);
     if (!profile) return res.status(404).json({ error: 'Profile not found' });

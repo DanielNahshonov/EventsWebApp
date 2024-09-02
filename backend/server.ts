@@ -2,11 +2,18 @@ import express from 'express';
 import eventRoutes from './routes/eventRoutes';
 import profileRoutes from './routes/profileRoutes';
 import eventProfileRoutes from './routes/eventProfileRoutes';
+import cors from 'cors';
+
 const mongoose = require('mongoose');
 
 const app = express();
 const port = 3000;
 
+app.use(cors({
+    origin: 'http://localhost:5173' // Адрес твоего фронтенда
+  }));
+
+  
 mongoose
   .connect(
     'mongodb+srv://dnahshonov:sk859vlbro@cluster0.txy3eu1.mongodb.net/eventsWebApp'

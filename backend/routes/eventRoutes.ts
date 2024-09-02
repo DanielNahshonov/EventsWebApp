@@ -4,7 +4,7 @@ import Event from '../models/event';
 const router = Router();
 
 // Создать событие
-router.post('/events', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const event = new Event(req.body);
     await event.save();
@@ -19,7 +19,7 @@ router.post('/events', async (req, res) => {
   });
 
 // Получить все события
-router.get('/events', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const events = await Event.find();
     res.status(200).json(events);
@@ -32,7 +32,7 @@ router.get('/events', async (req, res) => {
     }
   });
 // Получить событие по ID
-router.get('/events/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ error: 'Event not found' });
@@ -47,7 +47,7 @@ router.get('/events/:id', async (req, res) => {
   });
 
 // Обновить событие
-router.put('/events/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!event) return res.status(404).json({ error: 'Event not found' });
@@ -61,7 +61,7 @@ router.put('/events/:id', async (req, res) => {
     }
   });
 // Удалить событие
-router.delete('/events/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
     if (!event) return res.status(404).json({ error: 'Event not found' });

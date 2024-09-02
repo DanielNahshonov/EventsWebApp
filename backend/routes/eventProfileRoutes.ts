@@ -4,9 +4,13 @@ import EventProfile from "../models/eventProfile";
 const router = Router();
 
 // Создать связь между событием и профилем
-router.post("/eventprofiles", async (req, res) => {
+router.post("/", async (req, res) => {
+    const {eventID,profileID}=req.body
+    if (!eventID || !profileID) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
   try {
-    const eventProfile = new EventProfile(req.body);
+    const eventProfile = new EventProfile({eventID,profileID});
     await eventProfile.save();
     res.status(201).json(eventProfile);
   } catch (error) {
@@ -19,7 +23,7 @@ router.post("/eventprofiles", async (req, res) => {
 });
 
 // Получить все связи между событиями и профилями
-router.get("/eventprofiles", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const eventProfiles = await EventProfile.find()
       .populate("eventID")
@@ -34,7 +38,7 @@ router.get("/eventprofiles", async (req, res) => {
   }
 });
 // Получить связь по ID
-router.get("/eventprofiles/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const eventProfile = await EventProfile.findById(req.params.id)
       .populate("eventID")
@@ -51,7 +55,7 @@ router.get("/eventprofiles/:id", async (req, res) => {
   }
 });
 // Обновить связь
-router.put("/eventprofiles/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const eventProfile = await EventProfile.findByIdAndUpdate(
       req.params.id,
@@ -70,7 +74,7 @@ router.put("/eventprofiles/:id", async (req, res) => {
   }
 });
 // Удалить связь
-router.delete("/eventprofiles/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const eventProfile = await EventProfile.findByIdAndDelete(req.params.id);
     if (!eventProfile)
